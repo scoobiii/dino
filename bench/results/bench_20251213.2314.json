@@ -1,0 +1,23 @@
+{
+  "project_version": "20251213.2314",
+  "bench_version": "1.0.2-functional",
+  "date": "2025-12-13T23:14:03+00:00",
+  "functional_test": {
+    "status": "passed",
+    "expected_output_token": 216
+  },
+  "performance": {
+    "wasm_size_kb": 1,
+    "avg_e2e_latency_ms": 19,
+    "throughput_tokens_per_sec": 52
+  },
+  "wasm_exports": {
+    "init_model": true,
+    "forward": true,
+    "alloc": true
+  },
+  "environment": {
+    "arch": "aarch64",
+    "bend_version": "bend-lang 0.2.38"
+  }
+}
