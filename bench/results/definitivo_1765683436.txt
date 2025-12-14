@@ -1,0 +1,7 @@
+BENCHMARK DEFINITIVO - Sun Dec 14 03:37:16 AM UTC 2025
+Workload: 100 tokens
+Vintage: 27.3 ms
+Pássaro: 47.1 ms
+Ratio: .57
+Escala: 100 tokens vs 3 tokens
+Conclusão: Pássaro vence

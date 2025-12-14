@@ -1,0 +1,38 @@
+ #!/usr/bin/env bash
+# bench/bend_forward_hot.sh
+# Purpose: medir forward quente (runtime já inicializado)
+# Contract: mede SOMENTE execução do grafo
+
+set -euo pipefail
+
+MODEL="arch/model/bend256k.bend"
+ITER=100
+WARMUP=10
+
+assert_cmd() { command -v "$1" >/dev/null || exit 1; }
+assert_cmd bend
+assert_cmd taskset
+
+echo "[INFO] Warmup..."
+for _ in $(seq 1 $WARMUP); do
+  bend run-c "$MODEL" >/dev/null
+done
+
+echo "[INFO] Benchmark hot forward..."
+START=$(date +%s%N)
+
+for _ in $(seq 1 $ITER); do
+  taskset -c 0 bend run-c "$MODEL" >/dev/null
+done
+
+END=$(date +%s%N)
+
+AVG_MS=$(( (END-START)/ITER/1000000 ))
+
+cat <<EOF
+{
+  "benchmark": "bend_forward_hot",
+  "iterations": $ITER,
+  "avg_latency_ms": $AVG_MS
+}
+EOF

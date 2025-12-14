@@ -1,0 +1,73 @@
+// arch/model/tiny256k.c — v2.0.0-professional
+// Fix: Type safety, bounds checking, initialization
+// Vintage baseline - freestanding WASM (no libc)
+
+// Standard types (no libc)
+typedef unsigned int uint32_t;
+typedef unsigned long size_t;
+
+// Model configuration
+#define VOCAB_SIZE 256
+#define EMBED_DIM 8
+#define MAX_SEQ 8
+
+// Static storage (BSS segment)
+static float embeddings[VOCAB_SIZE * EMBED_DIM];
+static int initialized = 0;
+
+// Exported: Initialize model
+__attribute__((export_name("init_model")))
+void init_model(void) {
+    if (initialized) {
+        return;
+    }
+    
+    // Deterministic initialization (no random)
+    for (uint32_t i = 0; i < VOCAB_SIZE * EMBED_DIM; i++) {
+        embeddings[i] = (float)((i * 13 + 7) % 100) / 100.0f;
+    }
+    
+    initialized = 1;
+}
+
+// Exported: Forward pass
+__attribute__((export_name("forward")))
+uint32_t forward(uint32_t* tokens, uint32_t len) {
+    // Lazy init
+    if (!initialized) {
+        init_model();
+    }
+    
+    // Bounds check
+    if (len == 0) {
+        return 0;
+    }
+    if (len > MAX_SEQ) {
+        len = MAX_SEQ;
+    }
+    
+    // Context accumulation
+    float ctx[EMBED_DIM] = {0};
+    
+    for (uint32_t i = 0; i < len; i++) {
+        // Token ID with bounds check
+        uint32_t tok = tokens[i] & 0xFF;  // Mask to [0, 255]
+        
+        // Accumulate embeddings
+        for (uint32_t d = 0; d < EMBED_DIM; d++) {
+            ctx[d] += embeddings[tok * EMBED_DIM + d];
+        }
+    }
+    
+    // Score computation (weighted sum)
+    float score = 0.0f;
+    for (uint32_t d = 0; d < EMBED_DIM; d++) {
+        score += ctx[d] * (float)(d + 1);
+    }
+    
+    // Next token prediction (deterministic)
+    // Map score to [4, 255] range (valid token IDs)
+    uint32_t next_token = ((uint32_t)(score * 1000.0f) % 252) + 4;
+    
+    return next_token;
+}

@@ -1,0 +1,5 @@
+LEAN BENCH - Sun Dec 14 01:58:50 AM UTC 2025
+Vintage: 23.6 ms
+Pássaro: 43 ms
+Speedup: .54x
+Status: WASM_MISSING

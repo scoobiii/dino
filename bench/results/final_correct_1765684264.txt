@@ -1,0 +1,41 @@
+BENCHMARK FINAL CORRETO - Sun Dec 14 03:51:04 AM UTC 2025
+Vintage 3 tokens: 
+⏱️  VINTAGE (3 tokens) (5 execuções):
+  Exec 1:   29 ms
+  Exec 2:   33 ms
+  Exec 3:   19 ms
+  Exec 4:   42 ms
+  Exec 5:   45 ms
+  Média: 33.6 ms
+33.6 ms
+Vintage 100 tokens: 
+⏱️  VINTAGE (100 tokens corrigido) (5 execuções):
+  Exec 1:   26 ms
+  Exec 2:   67 ms
+  Exec 3:   16 ms
+  Exec 4:   18 ms
+  Exec 5:   17 ms
+  Média: 28.8 ms
+28.8 ms
+Pássaro 3 tokens: 
+⏱️  PÁSSARO (3 tokens) (5 execuções):
+  Exec 1:   49 ms
+  Exec 2:   26 ms
+  Exec 3:   36 ms
+  Exec 4:   31 ms
+  Exec 5:   32 ms
+  Média: 34.8 ms
+34.8 ms
+Pássaro 100 tokens: 
+⏱️  PÁSSARO (100 tokens corrigido) (5 execuções):
+  Exec 1:   35 ms
+  Exec 2:   34 ms
+  Exec 3:   34 ms
+  Exec 4:   31 ms
+  Exec 5:   31 ms
+  Média: 33.0 ms
+33.0 ms
+Escala Vintage: 33.6x
+Escala Pássaro: 34.8x
+Vencedor 100 tokens: Pássaro
+Observação: Modelos corrigidos para forçar trabalho real

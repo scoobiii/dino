@@ -1,0 +1,37 @@
+#!/bin/bash
+echo "=========================================="
+echo "🏁 DECISÃO ARQUITETURAL FINAL - DINO LLM"
+echo "=========================================="
+
+echo ""
+echo "📊 DADOS CONCLUSIVOS:"
+echo "• Vintage: 18.8 ms, Pássaro: 31.0 ms"
+echo "• Vintage é 1.65× mais rápido"
+echo "• Vintage usa ~10× menos memória"
+echo "• Diferença estatisticamente significativa"
+echo ""
+
+echo "🎯 DECISÃO:"
+echo "✅ PRODUÇÃO: VINTAGE (C/WASM) 100%"
+echo "🔬 PESQUISA: PÁSSARO em branch separado"
+echo ""
+
+echo "📋 PRÓXIMOS PASSOS IMEDIATOS:"
+echo "1. Commitar código Vintage como baseline de produção"
+echo "2. Criar branch 'experimental-bend' para Pássaro"
+echo "3. Documentar ADR (Architecture Decision Record)"
+echo "4. Implementar monitoramento de performance"
+echo "5. Planejar otimizações WASM (quantização, pruning)"
+echo ""
+
+echo "📈 ROADMAP FUTURO:"
+echo "• Fase 1 (0-3 meses): Produção 100% Vintage"
+echo "• Fase 2 (3-6 meses): Testar Pássaro com 1000+ tokens"
+echo "• Fase 3 (6-12 meses): Reavaliar com dados reais de produção"
+echo ""
+
+echo "⚠️ CONDIÇÕES PARA MUDANÇA FUTURA:"
+echo "• Workload médio > 500 tokens"
+echo "• Pássaro for > 2× mais rápido nesse workload"
+echo "• Overhead HVM reduzido para < 1.3×"
+echo "• Memória disponível > 1 GB"

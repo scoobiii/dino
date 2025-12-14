@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 # bench/dino_bench.sh — v2.0.0-professional
-# Fix: Proper timing, validation, error handling
 
 set -euo pipefail
 
@@ -9,39 +8,30 @@ readonly PROJECT_ROOT="$(cd "${SCRIPT_DIR}/.." && pwd)"
 readonly RESULTS_DIR="${SCRIPT_DIR}/results"
 readonly VINTAGE_WASM="${PROJECT_ROOT}/arch/serve/llm.wasm"
 readonly BIRD_BEND="${PROJECT_ROOT}/arch/model/bend256k.bend"
-
-# Configuration
 readonly WARMUP_RUNS=3
 readonly BENCH_RUNS=10
 
-# Logging
 log() { echo "[$(date -Iseconds)] $*"; }
 die() { log "ERROR: $*"; exit 1; }
 
-# Validation
 [[ -f "$VINTAGE_WASM" ]] || die "Vintage WASM not found: $VINTAGE_WASM"
 [[ -f "$BIRD_BEND" ]] || die "Bird source not found: $BIRD_BEND"
 command -v bend >/dev/null 2>&1 || die "bend not installed"
 command -v bc >/dev/null 2>&1 || die "bc not installed"
 
-# Setup
 mkdir -p "$RESULTS_DIR"
 readonly OUT="${RESULTS_DIR}/dino_$(date +%Y%m%d_%H%M%S).json"
 
 log "📊 Dino Benchmark (Vintage vs Bird)"
 log "Warmup: $WARMUP_RUNS | Measurement: $BENCH_RUNS"
 
-# Benchmark function with warmup
 benchmark() {
     local cmd=("$@")
-    local name="${cmd[0]}"
     
-    # Warmup
     for ((i=1; i<=WARMUP_RUNS; i++)); do
         "${cmd[@]}" >/dev/null 2>&1 || true
     done
     
-    # Measure
     local total_ns=0
     local success=0
     
@@ -61,27 +51,22 @@ benchmark() {
         return 1
     fi
     
-    # Return average in milliseconds
     echo "$((total_ns / success / 1000000))"
 }
 
-# Benchmark Vintage
 log "⏱️  Benchmarking Vintage..."
 VINTAGE_MS=$(benchmark bend run "$VINTAGE_WASM") || die "Vintage benchmark failed"
 
-# Benchmark Bird
 log "⏱️  Benchmarking Bird..."
 BIRD_MS=$(benchmark bend run-c "$BIRD_BEND") || die "Bird benchmark failed"
 
-# Calculate speedup
 if [[ $BIRD_MS -gt 0 ]]; then
     SPEEDUP=$(echo "scale=3; $VINTAGE_MS / $BIRD_MS" | bc)
 else
     SPEEDUP="N/A"
 fi
 
-# Generate report
-cat > "$OUT" <<EOF
+cat > "$OUT" <<EOFJ
 {
   "timestamp": "$(date -Iseconds)",
   "config": {
@@ -91,20 +76,15 @@ cat > "$OUT" <<EOF
   "results": {
     "vintage_ms_avg": $VINTAGE_MS,
     "bird_ms_avg": $BIRD_MS,
-    "speedup_factor": $SPEEDUP
+    "speedup_factor": "$SPEEDUP"
   },
   "interpretation": {
     "winner": "$(if (( $(echo "$SPEEDUP < 1" | bc -l) )); then echo "vintage"; else echo "bird"; fi)",
     "note": "Cold-start overhead dominates trivial workloads"
-  },
-  "artifacts": {
-    "vintage": "$VINTAGE_WASM",
-    "bird": "$BIRD_BEND"
   }
 }
-EOF
+EOFJ
 
-# Display results
 log "✅ Benchmark complete"
 echo ""
 echo "Results:"
@@ -114,7 +94,6 @@ echo "  Speedup: ${SPEEDUP}x"
 echo ""
 echo "Report saved: $OUT"
 
-# Pretty print JSON if jq available
 if command -v jq >/dev/null 2>&1; then
     echo ""
     jq . "$OUT"

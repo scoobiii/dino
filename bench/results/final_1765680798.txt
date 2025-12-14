@@ -1,0 +1,5 @@
+BENCHMARK FINAL - Sun Dec 14 02:53:18 AM UTC 2025
+Vintage (WASM): 27.2 ms
+Pássaro (Bend): 46.1 ms
+Speedup: .59x
+Observação: Benchmark completo

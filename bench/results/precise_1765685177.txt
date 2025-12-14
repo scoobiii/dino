@@ -1,0 +1,6 @@
+MEDIÇÃO PRECISA - Sun Dec 14 04:06:17 AM UTC 2025
+Vintage: 12.7 ms, 11.6 MB, 0.0% CPU
+Pássaro: 11.3 ms, 12.1 MB, 0.0% CPU
+Ratio Tempo: 1.12
+Ratio Memória: 1.04
+Método: 3 execuções cada, monitoramento em tempo real
